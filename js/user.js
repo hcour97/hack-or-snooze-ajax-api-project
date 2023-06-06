@@ -19,6 +19,7 @@ async function login(evt) {
 
   // User.login retrieves user info from API and returns User instance
   // which we'll make the globally-available, logged-in user.
+  try {
   currentUser = await User.login(username, password);
 
   $loginForm.trigger("reset");
@@ -27,6 +28,14 @@ async function login(evt) {
   updateUIOnUserLogin();
 }
 
+catch (error) {
+  if (error.name == "AxiosError") {
+    alert("Invalid Credentials!", error);
+  } else {
+    alert(error);
+    }
+  }
+}
 $loginForm.on("submit", login);
 
 /** Handle signup form submission. */
@@ -109,7 +118,9 @@ function saveUserCredentialsInLocalStorage() {
 
 function updateUIOnUserLogin() {
   console.debug("updateUIOnUserLogin");
+  hidePageComponents();
 
+  putStoriesOnPage();
   $allStoriesList.show();
 
   updateNavOnLogin();
